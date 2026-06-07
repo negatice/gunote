@@ -351,12 +351,12 @@ body {
 /* Compose */
 .compose {
   background: var(--header-bg); padding: 11px 14px;
-  display: flex; align-items: flex-end; gap: 8px;
+  display: flex; align-items: center; gap: 8px;
   flex-shrink: 0; border-top: 1px solid var(--border);
 }
 .compose-box {
   flex: 1; background: var(--bg); border-radius: 12px;
-  padding: 10px 13px; display: flex; align-items: flex-end; gap: 8px;
+  padding: 10px 13px; display: flex; align-items: center; gap: 8px;
   max-height: 160px; border: 1.5px solid var(--border); transition: border-color .2s, background .2s;
 }
 .compose-box:focus-within { border-color: var(--primary); background: var(--sidebar-bg); }
