@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CatatanKu – Login</title>
+  <style>
+    :root {
+      --wa-green: #25D366; --wa-dark: #128C7E; --wa-darker: #075E54;
+      --bg: #f0f2f5; --surface: #ffffff; --text: #111b21;
+      --text-sub: #667781; --border: #e9edef; --input-bg: #f8f9fa;
+      --error: #e53935;
+    }
+    [data-theme="dark"] {
+      --bg: #111b21; --surface: #202c33; --text: #e9edef;
+      --text-sub: #8696a0; --border: #2a3942; --input-bg: #2a3942;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+
+    /* Header */
+    .login-header {
+      background: #202c33; padding: 14px 24px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .login-header .logo { font-size: 24px; }
+    .login-header h1 { color: #e9edef; font-size: 20px; font-weight: 600; }
+
+    /* Main */
+    .login-main {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: 32px 16px;
+    }
+    .login-card {
+      background: var(--surface); border-radius: 20px;
+      box-shadow: 0 4px 32px rgba(0,0,0,.12);
+      padding: 36px 32px; width: 100%; max-width: 400px;
+    }
+
+    /* Tabs */
+    .auth-tabs { display: flex; gap: 0; margin-bottom: 28px; border-bottom: 2px solid var(--border); }
+    .auth-tab {
+      flex: 1; padding: 10px; text-align: center; font-size: 15px; font-weight: 600;
+      cursor: pointer; background: none; border: none; color: var(--text-sub);
+      border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .2s;
+    }
+    .auth-tab.active { color: var(--wa-dark); border-bottom-color: var(--wa-dark); }
+
+    /* Form */
+    .auth-form { display: flex; flex-direction: column; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label {
+      font-size: 12px; font-weight: 700; color: var(--text-sub);
+      text-transform: uppercase; letter-spacing: .5px;
+    }
+    .form-group input {
+      padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border);
+      background: var(--input-bg); color: var(--text); font-size: 15px;
+      font-family: inherit; outline: none; transition: border-color .2s;
+    }
+    .form-group input:focus { border-color: var(--wa-dark); }
+    .form-group input::placeholder { color: var(--text-sub); }
+
+    /* Submit */
+    .submit-btn {
+      padding: 14px; border-radius: 12px; border: none; cursor: pointer;
+      background: var(--wa-green); color: white; font-size: 15px; font-weight: 700;
+      font-family: inherit; transition: all .2s; margin-top: 4px;
+    }
+    .submit-btn:hover { background: var(--wa-dark); }
+    .submit-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+    /* Error / Success */
+    .alert {
+      padding: 10px 14px; border-radius: 10px; font-size: 13px; font-weight: 500;
+      display: none; margin-bottom: 4px;
+    }
+    .alert.error { background: #ffebee; color: var(--error); border: 1px solid #ffcdd2; }
+    .alert.success { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+    [data-theme="dark"] .alert.error { background: #2a1010; color: #ef9a9a; border-color: #4a2020; }
+    [data-theme="dark"] .alert.success { background: #0a2010; color: #a5d6a7; border-color: #1a4020; }
+
+    /* Divider */
+    .divider {
+      text-align: center; font-size: 12px; color: var(--text-sub); margin: 4px 0;
+      position: relative;
+    }
+    .divider::before, .divider::after {
+      content: ''; position: absolute; top: 50%; width: 38%; height: 1px;
+      background: var(--border);
+    }
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
+
+    /* Footer */
+    .login-footer {
+      text-align: center; padding: 20px; color: var(--text-sub); font-size: 12px;
+    }
+
+    /* Loading spinner */
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,.4); border-top-color: white;
+      border-radius: 50%; animation: spin .6s linear infinite;
+      vertical-align: middle; margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body data-theme="light">
+
+<header class="login-header">
+  <span class="logo"></span>
+  <h1>Gunote</h1>
+</header>
+
+<main class="login-main">
+  <div class="login-card">
+
+    <!-- Tabs -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Masuk</button>
+      <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">Daftar</button>
+    </div>
+
+    <!-- Alert -->
+    <div class="alert" id="alert"></div>
+
+    <!-- Login Form -->
+    <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="email@kamu.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="submit-btn" id="loginBtn">Masuk</button>
+    </form>
+
+    <!-- Register Form -->
+    <form class="auth-form" id="registerForm" style="display:none" onsubmit="handleRegister(event)">
+      <div class="form-group">
+        <label>Nama Lengkap</label>
+        <input type="text" id="regName" placeholder="Nama kamu" required autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="regEmail" placeholder="email@kamu.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Password <span style="font-weight:400;text-transform:none">(min. 6 karakter)</span></label>
+        <input type="password" id="regPassword" placeholder="••••••••" required minlength="6" autocomplete="new-password">
+      </div>
+      <button type="submit" class="submit-btn" id="registerBtn">Buat Akun</button>
+    </form>
+
+  </div>
+</main>
+
+<footer class="login-footer">GuNote &copy; 2026 · Notes, Todo & Keuangan</footer>
+
+<script src="js/api.js"></script>
+<script>
+  // Redirect jika sudah login
+  if (Auth.isLoggedIn()) window.location.href = '/';
+
+  function switchTab(tab) {
+    const isLogin = tab === 'login';
+    document.getElementById('tabLogin').classList.toggle('active', isLogin);
+    document.getElementById('tabRegister').classList.toggle('active', !isLogin);
+    document.getElementById('loginForm').style.display    = isLogin ? 'flex' : 'none';
+    document.getElementById('registerForm').style.display = isLogin ? 'none' : 'flex';
+    hideAlert();
+  }
+
+  function showAlert(msg, type = 'error') {
+    const el = document.getElementById('alert');
+    el.textContent = msg;
+    el.className = 'alert ' + type;
+    el.style.display = 'block';
+  }
+  function hideAlert() {
+    document.getElementById('alert').style.display = 'none';
+  }
+
+  function setLoading(btnId, loading) {
+    const btn = document.getElementById(btnId);
+    btn.disabled = loading;
+    btn.innerHTML = loading
+      ? '<span class="spinner"></span>Memproses...'
+      : (btnId === 'loginBtn' ? 'Masuk' : 'Buat Akun');
+  }
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    hideAlert();
+    const email    = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    setLoading('loginBtn', true);
+    try {
+      const { token, user } = await API.auth.login(email, password);
+      Auth.setToken(token);
+      Auth.setUser(user);
+      window.location.href = '/';
+    } catch (err) {
+      showAlert(err.message);
+    } finally {
+      setLoading('loginBtn', false);
+    }
+  }
+
+  async function handleRegister(e) {
+    e.preventDefault();
+    hideAlert();
+    const name     = document.getElementById('regName').value;
+    const email    = document.getElementById('regEmail').value;
+    const password = document.getElementById('regPassword').value;
+    setLoading('registerBtn', true);
+    try {
+      const { token, user } = await API.auth.register(name, email, password);
+      Auth.setToken(token);
+      Auth.setUser(user);
+      showAlert('Akun berhasil dibuat! Mengalihkan...', 'success');
+      setTimeout(() => { window.location.href = '/'; }, 1200);
+    } catch (err) {
+      showAlert(err.message);
+    } finally {
+      setLoading('registerBtn', false);
+    }
+  }
+</script>
+</body>
+</html>

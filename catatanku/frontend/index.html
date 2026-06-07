@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CatatanKu – Notes & Todo</title>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body data-theme="light">
+
+<!-- Loading overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Memuat catatan...</div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="app" id="app">
+  <!-- ── Sidebar ── -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h1>GuNote</h1>
+      <div class="sidebar-header-actions">
+        <a href="/finance.html" class="icon-btn tooltip" data-tip="Keuangan" style="text-decoration:none;font-size:18px">💰</a>
+        <button class="icon-btn tooltip" data-tip="Semua Jadwal" onclick="setFilter('schedule', document.querySelector('[data-filter=schedule]'))" id="scheduleHeaderBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="badge-dot" id="reminderDot" style="display:none"></span>
+        </button>
+        <button class="icon-btn tooltip" data-tip="Mode Gelap" onclick="toggleTheme()">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="icon-btn tooltip" data-tip="Catatan Baru" onclick="openNewNote()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+        </button>
+        <button class="icon-btn tooltip" data-tip="Keluar" onclick="logout()" style="color:#ff8a65">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="stats-bar" id="statsBar"></div>
+    <div id="notifBanner" style="display:none" class="notif-banner">
+      <span>🔔</span><span>Izinkan notifikasi untuk pengingat</span>
+      <button onclick="requestNotifPermission()">Izinkan</button>
+      <button class="close-banner" onclick="document.getElementById('notifBanner').style.display='none'">×</button>
+    </div>
+
+    <div class="search-wrap">
+      <div class="search-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Cari catatan..." id="searchInput" oninput="renderList()">
+      </div>
+    </div>
+
+    <div class="filter-tabs" id="filterTabs">
+      <button class="filter-tab active" data-filter="all"      onclick="setFilter('all',this)">Semua</button>
+      <button class="filter-tab schedule-tab" data-filter="schedule" onclick="setFilter('schedule',this)">⏰ Jadwal</button>
+      <button class="filter-tab" data-filter="todo"     onclick="setFilter('todo',this)">Todo ✓</button>
+      <button class="filter-tab" data-filter="note"     onclick="setFilter('note',this)">Catatan</button>
+      <button class="filter-tab" data-filter="pinned"   onclick="setFilter('pinned',this)">📌 Pinned</button>
+      <button class="filter-tab" data-filter="work"     onclick="setFilter('work',this)">💼 Kerja</button>
+      <button class="filter-tab" data-filter="personal" onclick="setFilter('personal',this)">👤 Personal</button>
+      <button class="filter-tab" data-filter="idea"     onclick="setFilter('idea',this)">💡 Ide</button>
+      <button class="filter-tab" data-filter="urgent"   onclick="setFilter('urgent',this)">🔥 Penting</button>
+    </div>
+    <div class="note-list" id="noteList"></div>
+  </div>
+
+  <!-- ── Main Area ── -->
+  <div class="main" id="main">
+    <div id="welcomeScreen" class="welcome">
+      <div class="welcome-icon">📝</div>
+      <h2>CatatanKu</h2>
+      <p>Atur notes & todo kamu. Klik catatan di kiri atau buat baru!</p>
+      <div class="welcome-badge" onclick="openNewNote()">+ Buat Catatan Baru</div>
+      <div class="user-chip" id="userChip"></div>
+    </div>
+
+    <div id="chatView" style="display:none; flex:1; flex-direction:column; height:100%;">
+      <div class="main-header">
+        <button class="icon-btn back-btn" onclick="showSidebar()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        </button>
+        <div class="note-header-avatar" id="noteHeaderAvatar" onclick="editCurrentNote()">?</div>
+        <div class="main-header-info">
+          <div class="title" id="noteHeaderTitle">–</div>
+          <div class="subtitle" id="noteHeaderSub">–</div>
+        </div>
+        <div class="main-header-actions">
+          <button class="icon-btn tooltip" data-tip="Set Reminder" id="reminderBtn" onclick="openReminderDialog()" style="color:var(--reminder-color)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="badge-dot" id="noteReminderDot" style="display:none"></span>
+          </button>
+          <button class="icon-btn tooltip" data-tip="Pin" id="pinBtn" onclick="togglePin()">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z"/></svg>
+          </button>
+          <button class="icon-btn tooltip" data-tip="Edit" onclick="editCurrentNote()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+          </button>
+          <button class="icon-btn tooltip" data-tip="Hapus" onclick="deleteCurrentNote()" style="color:#ff6b6b">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6m5 0V4h4v2"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="messages-wrap" id="messagesWrap"></div>
+      <div class="compose" id="compose">
+        <div class="compose-box">
+          <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">
+            <button class="icon-btn tooltip" data-tip="Mode Todo" id="todoModeBtn" onclick="toggleTodoMode()" style="color:var(--text-sub)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
+            </button>
+          </div>
+          <textarea id="composeInput" class="compose-input" placeholder="Ketik pesan atau todo..." rows="1" oninput="autoResize(this)" onkeydown="handleCompose(event)"></textarea>
+        </div>
+        <button class="send-btn" onclick="sendMessage()">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Dialogs -->
+<div id="newNoteOverlay" class="overlay" style="display:none" onclick="if(event.target===this)closeNewNote()">
+  <div class="sheet">
+    <h3 id="sheetTitle">📝 Catatan Baru</h3>
+    <div class="form-field"><label>Ikon</label><div class="emoji-row" id="emojiRow"></div></div>
+    <div class="form-field"><label>Judul</label><input type="text" id="noteTitleInput" placeholder="Nama catatan..." maxlength="60"></div>
+    <div class="form-field"><label>Deskripsi (opsional)</label><textarea id="noteDescInput" placeholder="Deskripsi singkat..."></textarea></div>
+    <div class="form-field"><label>Tipe</label>
+      <select id="noteTypeInput">
+        <option value="note">📋 Catatan Biasa</option>
+        <option value="todo">✅ Todo List</option>
+      </select>
+    </div>
+    <div class="form-field"><label>Label</label>
+      <div class="tag-selector" id="tagSelector">
+        <div class="tag-option work"     data-tag="work"     onclick="toggleTag(this)">💼 Kerja</div>
+        <div class="tag-option personal" data-tag="personal" onclick="toggleTag(this)">👤 Personal</div>
+        <div class="tag-option idea"     data-tag="idea"     onclick="toggleTag(this)">💡 Ide</div>
+        <div class="tag-option urgent"   data-tag="urgent"   onclick="toggleTag(this)">🔥 Penting</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="closeNewNote()">Batal</button>
+      <button class="btn btn-primary" onclick="saveNote()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<div id="reminderOverlay" class="overlay" style="display:none" onclick="if(event.target===this)closeReminderDialog()">
+  <div class="sheet">
+    <h3>⏰ Atur Pengingat</h3>
+    <div class="form-field"><label>Judul Pengingat</label><input type="text" id="reminderLabel" placeholder="Contoh: Deadline laporan..." maxlength="80"></div>
+    <div class="date-time-row" style="display:flex;gap:10px;margin-bottom:14px;">
+      <div class="form-field" style="flex:1"><label>Tanggal</label><input type="date" id="reminderDate"></div>
+      <div class="form-field" style="flex:1"><label>Waktu</label><input type="time" id="reminderTime"></div>
+    </div>
+    <div class="form-field"><label>Ulangi</label>
+      <select id="reminderRepeat">
+        <option value="none">🔕 Tidak Berulang</option>
+        <option value="daily">📅 Setiap Hari</option>
+        <option value="weekly">🗓️ Setiap Minggu</option>
+        <option value="monthly">📆 Setiap Bulan</option>
+      </select>
+    </div>
+    <div id="existingReminders"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="closeReminderDialog()">Batal</button>
+      <button class="btn btn-primary" style="background:var(--reminder-color)" onclick="saveReminder()">⏰ Simpan</button>
+    </div>
+  </div>
+</div>
+
+<div id="confirmOverlay" class="overlay center" style="display:none" onclick="if(event.target===this)closeConfirm()">
+  <div class="sheet center">
+    <h3>🗑️ Hapus Catatan?</h3>
+    <p style="color:var(--text-sub);font-size:14px;margin:8px 0 20px">Catatan ini akan dihapus permanen.</p>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Batal</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Hapus</button>
+    </div>
+  </div>
+</div>
+
+<div id="ctxMenu" class="ctx-menu" style="display:none"></div>
+
+<script src="js/api.js"></script>
+<script src="js/notes.js"></script>
+</body>
+</html>

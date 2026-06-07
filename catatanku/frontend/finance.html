@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CatatanKu – Keuangan</title>
+  <link rel="stylesheet" href="css/finance.css">
+</head>
+<body data-theme="light">
+
+<div class="fin-app">
+  <header class="fin-header">
+    <a href="/" class="back-link">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Catatan
+    </a>
+    <h1>💰 Keuangan</h1>
+    <button class="theme-btn" onclick="toggleTheme()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </header>
+
+  <div class="balance-hero">
+    <div class="balance-label">Saldo Bersih</div>
+    <div class="balance-amount" id="balanceAmount">Rp 0</div>
+    <div class="balance-row">
+      <div class="balance-item">
+        <span class="bal-icon">📈</span>
+        <div><div class="bal-lbl">Pendapatan</div><div class="bal-val income-color" id="heroIncome">Rp 0</div></div>
+      </div>
+      <div class="balance-divider"></div>
+      <div class="balance-item">
+        <span class="bal-icon">📉</span>
+        <div><div class="bal-lbl">Pengeluaran</div><div class="bal-val expense-color" id="heroExpense">Rp 0</div></div>
+      </div>
+    </div>
+    <div class="savings-rate-wrap">
+      <div class="savings-label">Tingkat Tabungan</div>
+      <div class="savings-bar-wrap"><div class="savings-bar" id="savingsBar"></div></div>
+      <div class="savings-pct" id="savingsPct">0%</div>
+    </div>
+  </div>
+
+  <div class="period-bar">
+    <div class="period-tabs">
+      <button class="period-tab" data-period="daily"   onclick="setPeriod('daily',this)">Harian</button>
+      <button class="period-tab" data-period="weekly"  onclick="setPeriod('weekly',this)">Mingguan</button>
+      <button class="period-tab active" data-period="monthly" onclick="setPeriod('monthly',this)">Bulanan</button>
+    </div>
+    <div class="period-nav">
+      <button class="nav-btn" onclick="navPeriod(-1)">‹</button>
+      <span class="period-label" id="periodLabel">–</span>
+      <button class="nav-btn" id="navNext" onclick="navPeriod(1)">›</button>
+    </div>
+  </div>
+
+  <div class="summary-cards">
+    <div class="summary-card">
+      <div class="sc-top"><div class="sc-icon-wrap income-icon">📈</div><div class="sc-change" id="incomeChange"></div></div>
+      <div class="sc-label">Pendapatan</div>
+      <div class="sc-value income-color" id="incomeTotal">Rp 0</div>
+      <div class="sc-count" id="incomeCount">0 transaksi</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-top"><div class="sc-icon-wrap expense-icon">📉</div><div class="sc-change" id="expenseChange"></div></div>
+      <div class="sc-label">Pengeluaran</div>
+      <div class="sc-value expense-color" id="expenseTotal">Rp 0</div>
+      <div class="sc-count" id="expenseCount">0 transaksi</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-top"><div class="sc-icon-wrap balance-icon">💵</div></div>
+      <div class="sc-label">Selisih</div>
+      <div class="sc-value" id="netTotal">Rp 0</div>
+      <div class="sc-count">periode ini</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-top"><div class="sc-icon-wrap tx-icon">🔄</div></div>
+      <div class="sc-label">Transaksi</div>
+      <div class="sc-value" id="txCountTotal">0</div>
+      <div class="sc-count">total periode ini</div>
+    </div>
+  </div>
+
+  <div class="chart-section">
+    <div class="chart-header">
+      <h3 class="section-title">Tren Keuangan</h3>
+      <div class="chart-legend">
+        <span class="legend-item"><span class="legend-dot income-dot"></span>Masuk</span>
+        <span class="legend-item"><span class="legend-dot expense-dot"></span>Keluar</span>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+  </div>
+
+  <div class="cat-section">
+    <div class="cat-header">
+      <h3 class="section-title">Kategori</h3>
+      <div class="cat-toggle-wrap">
+        <button class="cat-toggle-btn active-expense" id="catExpBtn" onclick="setCatView('expense',this)">Pengeluaran</button>
+        <button class="cat-toggle-btn" id="catIncBtn"  onclick="setCatView('income',this)">Pendapatan</button>
+      </div>
+    </div>
+    <div id="categoryBars"></div>
+  </div>
+
+  <div class="tx-section">
+    <div class="tx-sec-header">
+      <h3 class="section-title">Transaksi</h3>
+      <div class="tx-search-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="search" id="txSearch" placeholder="Cari..." oninput="renderTxList()">
+      </div>
+    </div>
+    <div class="tx-filters">
+      <select id="txTypeFilter" onchange="renderTxList()">
+        <option value="all">Semua Tipe</option>
+        <option value="income">📈 Pendapatan</option>
+        <option value="expense">📉 Pengeluaran</option>
+      </select>
+      <select id="txCatFilter" onchange="renderTxList()">
+        <option value="all">Semua Kategori</option>
+      </select>
+    </div>
+    <div id="txList" class="tx-list"></div>
+    <div class="bottom-actions">
+      <button class="export-btn" onclick="exportCSV()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        Export CSV
+      </button>
+    </div>
+  </div>
+</div>
+
+<button class="fab" onclick="openAddTx()">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>
+
+<div id="txModal" class="overlay" style="display:none" onclick="if(event.target===this)closeTxModal()">
+  <div class="sheet">
+    <div class="sheet-drag"></div>
+    <h3 id="txModalTitle">➕ Tambah Transaksi</h3>
+    <div class="type-toggle">
+      <button class="type-btn active-expense" id="typeExpense" onclick="setTxType('expense')">📉 Pengeluaran</button>
+      <button class="type-btn" id="typeIncome" onclick="setTxType('income')">📈 Pendapatan</button>
+    </div>
+    <div class="form-field"><label>Jumlah (Rp)</label>
+      <div class="amount-input-wrap">
+        <span class="currency-prefix">Rp</span>
+        <input type="number" id="txAmount" placeholder="0" min="0" inputmode="decimal" step="1000">
+      </div>
+    </div>
+    <div class="form-field"><label>Kategori</label><div class="cat-grid" id="catGrid"></div></div>
+    <div class="form-field"><label>Keterangan <span style="font-weight:400;text-transform:none">(opsional)</span></label>
+      <input type="text" id="txDesc" placeholder="Catatan singkat..." maxlength="80">
+    </div>
+    <div class="form-field"><label>Tanggal</label><input type="date" id="txDate"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="closeTxModal()">Batal</button>
+      <button class="btn btn-primary" id="txSaveBtn" onclick="saveTx()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<div id="confirmOverlay" class="overlay center" style="display:none" onclick="if(event.target===this)closeConfirm()">
+  <div class="sheet center">
+    <h3>🗑️ Hapus Transaksi?</h3>
+    <p style="color:var(--text-sub);font-size:14px;margin:8px 0 20px">Transaksi ini akan dihapus permanen.</p>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Batal</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Hapus</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastContainer" class="toast-container"></div>
+
+<script src="js/api.js"></script>
+<script src="js/finance.js"></script>
+</body>
+</html>
