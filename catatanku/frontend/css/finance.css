@@ -78,7 +78,7 @@ body {
   gap: 6px;
   color: var(--text-sub);
   text-decoration: none;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   transition: color .2s;
   padding: 6px 10px;
@@ -88,7 +88,7 @@ body {
 
 .fin-header h1 {
   color: var(--primary);
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.5px;
 }
@@ -115,7 +115,7 @@ body {
 }
 
 .balance-label {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -146,7 +146,7 @@ body {
   gap: 10px;
 }
 .bal-icon { font-size: 22px; }
-.bal-lbl { font-size: 11px; color: rgba(255,255,255,.6); margin-bottom: 2px; }
+.bal-lbl { font-size: 12px; color: rgba(255,255,255,.6); margin-bottom: 2px; }
 .bal-val { font-size: 15px; font-weight: 700; }
 .income-color { color: #69f0ae; }
 .expense-color { color: #ff8a80; }
@@ -164,7 +164,7 @@ body {
   gap: 10px;
 }
 .savings-label {
-  font-size: 11px;
+  font-size: 12px;
   color: rgba(255,255,255,.6);
   white-space: nowrap;
 }
@@ -217,7 +217,7 @@ body {
   border: none;
   background: none;
   color: var(--text-sub);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all .2s;
@@ -252,7 +252,7 @@ body {
 .nav-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
 .nav-btn:disabled { opacity: .35; cursor: default; }
 .period-label {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text);
   min-width: 100px;
@@ -295,7 +295,7 @@ body {
 .tx-icon { background: rgba(79,70,229,.1); }
 
 .sc-label {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-sub);
   font-weight: 600;
   text-transform: uppercase;
@@ -303,7 +303,7 @@ body {
   margin-bottom: 3px;
 }
 .sc-value {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--text);
   margin-bottom: 2px;
@@ -312,11 +312,11 @@ body {
 .sc-value.income-color { color: var(--income-color); }
 .sc-value.expense-color { color: var(--expense-color); }
 .sc-count {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-sub);
 }
 .sc-change {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   padding: 2px 6px;
   border-radius: 6px;
@@ -341,7 +341,7 @@ body {
 }
 
 .section-title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--text);
 }
@@ -354,7 +354,7 @@ body {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-sub);
 }
 .legend-dot {
@@ -405,7 +405,7 @@ body {
   border: none;
   background: none;
   color: var(--text-sub);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all .2s;
@@ -424,17 +424,17 @@ body {
   margin-bottom: 5px;
 }
 .cat-bar-label {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text);
   font-weight: 500;
 }
 .cat-bar-amount {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--text);
 }
 .cat-bar-pct {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-sub);
   margin-left: 6px;
 }
@@ -488,7 +488,7 @@ body {
   border: none;
   outline: none;
   background: none;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text);
   width: 100%;
 }
@@ -506,7 +506,7 @@ body {
   border: 1.5px solid var(--border);
   background: var(--input-bg);
   color: var(--text);
-  font-size: 12px;
+  font-size: 13px;
   font-family: inherit;
   outline: none;
   cursor: pointer;
@@ -518,7 +518,7 @@ body {
 .tx-date-group {}
 .tx-date-label {
   padding: 8px 16px 4px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--text-sub);
   text-transform: uppercase;
@@ -556,7 +556,7 @@ body {
 
 .tx-info { flex: 1; overflow: hidden; }
 .tx-cat-label {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text);
   white-space: nowrap;
@@ -564,7 +564,7 @@ body {
   text-overflow: ellipsis;
 }
 .tx-desc {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-sub);
   margin-top: 1px;
   white-space: nowrap;
@@ -572,19 +572,19 @@ body {
   text-overflow: ellipsis;
 }
 .tx-time {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-sub);
 }
 
 .tx-amount-col { text-align: right; flex-shrink: 0; }
 .tx-amount {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
 }
 .tx-amount.income { color: var(--income-color); }
 .tx-amount.expense { color: var(--expense-color); }
 .tx-type-badge {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--text-sub);
   margin-top: 2px;
 }
@@ -631,7 +631,7 @@ body {
   border: 1.5px solid var(--border);
   background: var(--surface);
   color: var(--text-sub);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all .2s;
@@ -720,7 +720,7 @@ body {
   border: 2px solid var(--border);
   background: var(--bg);
   color: var(--text-sub);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   transition: all .2s;
@@ -733,7 +733,7 @@ body {
 .form-field { margin-bottom: 14px; }
 .form-field label {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--text-sub);
   text-transform: uppercase;
@@ -780,7 +780,7 @@ body {
   border: 2px solid var(--border);
   background: var(--input-bg);
   color: var(--text);
-  font-size: 14px;
+  font-size: 15px;
   font-family: inherit;
   outline: none;
   transition: border-color .2s;
@@ -800,7 +800,7 @@ body {
   border: 1.5px solid var(--border);
   background: var(--bg);
   color: var(--text);
-  font-size: 13px;
+  font-size: 14px;
   cursor: pointer;
   transition: all .15s;
   white-space: nowrap;

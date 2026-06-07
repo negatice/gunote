@@ -87,7 +87,7 @@ body {
   border-top-color: white; border-radius: 50%;
   animation: spin .7s linear infinite;
 }
-.loading-text { color: rgba(255,255,255,.75); font-size: 13px; font-weight: 500; }
+.loading-text { color: rgba(255,255,255,.75); font-size: 14px; font-weight: 500; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ── Layout ───────────────────────────────────────────── */
@@ -114,7 +114,7 @@ body {
   border-bottom: 1px solid var(--border);
 }
 .sidebar-header h1 {
-  color: var(--primary); font-size: 19px;
+  color: var(--primary); font-size: 22px;
   font-weight: 800; letter-spacing: -0.5px;
 }
 .sidebar-header-actions { display: flex; gap: 2px; }
@@ -145,20 +145,20 @@ body {
   padding: 8px 4px; border-radius: 10px; transition: background .15s;
 }
 .stat:hover { background: var(--primary-light); }
-.stat .num { font-size: 18px; font-weight: 700; color: var(--primary); }
+.stat .num { font-size: 20px; font-weight: 700; color: var(--primary); }
 .stat .num.orange { color: var(--reminder-color); }
-.stat .lbl { font-size: 10px; color: var(--text-sub); text-transform: uppercase; letter-spacing: .5px; margin-top: 1px; }
+.stat .lbl { font-size: 12px; color: var(--text-sub); text-transform: uppercase; letter-spacing: .5px; margin-top: 1px; }
 
 /* Notif banner */
 .notif-banner {
   background: #fffbeb; border-bottom: 1px solid #fde68a;
   padding: 9px 14px; display: flex; align-items: center;
-  gap: 8px; font-size: 12px; color: #92400e; flex-wrap: wrap;
+  gap: 8px; font-size: 13px; color: #92400e; flex-wrap: wrap;
 }
 [data-theme="dark"] .notif-banner { background: #1c1504; border-color: #713f12; color: #fbbf24; }
 .notif-banner button {
   background: var(--reminder-color); color: white; border: none;
-  padding: 3px 10px; border-radius: 6px; font-size: 11px;
+  padding: 3px 10px; border-radius: 6px; font-size: 12px;
   font-weight: 600; cursor: pointer;
 }
 .notif-banner .close-banner { background: none; color: currentColor; font-size: 16px; margin-left: auto; }
@@ -173,7 +173,7 @@ body {
 }
 .search-box:focus-within { border-color: var(--primary); background: var(--sidebar-bg); }
 .search-box svg { color: var(--text-sub); min-width: 16px; }
-.search-box input { border: none; outline: none; background: none; flex: 1; font-size: 13px; color: var(--text); }
+.search-box input { border: none; outline: none; background: none; flex: 1; font-size: 15px; color: var(--text); }
 .search-box input::placeholder { color: var(--text-sub); }
 
 /* Filter tabs */
@@ -183,7 +183,7 @@ body {
 }
 .filter-tabs::-webkit-scrollbar { display: none; }
 .filter-tab {
-  padding: 5px 12px; border-radius: 8px; font-size: 12px;
+  padding: 5px 12px; border-radius: 8px; font-size: 13px;
   font-weight: 500; cursor: pointer; border: 1.5px solid transparent;
   background: transparent; color: var(--text-sub);
   transition: all .15s; white-space: nowrap;
@@ -220,27 +220,27 @@ body {
 .note-info { flex: 1; overflow: hidden; }
 .note-title-row { display: flex; justify-content: space-between; align-items: center; }
 .note-title {
-  font-size: 13px; font-weight: 600; color: var(--text);
+  font-size: 15px; font-weight: 600; color: var(--text);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px;
 }
-.note-time { font-size: 11px; color: var(--text-sub); white-space: nowrap; }
+.note-time { font-size: 12px; color: var(--text-sub); white-space: nowrap; }
 .note-preview {
-  font-size: 12px; color: var(--text-sub); margin-top: 2px;
+  font-size: 13px; color: var(--text-sub); margin-top: 2px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .note-badges { display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap; align-items: center; }
-.badge { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 5px; }
+.badge { font-size: 12px; font-weight: 600; padding: 2px 7px; border-radius: 5px; }
 .badge-work     { background: var(--tag-work);     color: var(--tag-work-text); }
 .badge-personal { background: var(--tag-personal); color: var(--tag-personal-text); }
 .badge-idea     { background: var(--tag-idea);     color: var(--tag-idea-text); }
 .badge-urgent   { background: var(--tag-urgent);   color: var(--tag-urgent-text); }
-.badge-reminder { background: #fffbeb; color: #92400e; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 5px; }
+.badge-reminder { background: #fffbeb; color: #92400e; font-size: 12px; font-weight: 600; padding: 2px 7px; border-radius: 5px; }
 .progress-bar { height: 3px; background: var(--border); border-radius: 2px; margin: 5px 0 0; overflow: hidden; }
 .progress-fill { height: 100%; background: var(--primary); border-radius: 2px; transition: width .4s; }
 
 /* Schedule view */
 .schedule-section-title {
-  font-size: 10px; font-weight: 700; color: var(--text-sub);
+  font-size: 12px; font-weight: 700; color: var(--text-sub);
   text-transform: uppercase; letter-spacing: 1px;
   padding: 12px 16px 4px;
 }
@@ -256,9 +256,9 @@ body {
   justify-content: center; font-size: 17px; flex-shrink: 0;
 }
 .schedule-item .s-info { flex: 1; overflow: hidden; }
-.schedule-item .s-label { font-size: 13px; font-weight: 600; color: var(--text); }
-.schedule-item .s-note  { font-size: 11px; color: var(--text-sub); margin-top: 1px; }
-.schedule-item .s-time  { font-size: 11px; font-weight: 700; color: var(--reminder-color); margin-top: 3px; }
+.schedule-item .s-label { font-size: 15px; font-weight: 600; color: var(--text); }
+.schedule-item .s-note  { font-size: 12px; color: var(--text-sub); margin-top: 1px; }
+.schedule-item .s-time  { font-size: 12px; font-weight: 700; color: var(--reminder-color); margin-top: 3px; }
 .schedule-item .s-del {
   background: none; border: none; cursor: pointer;
   color: var(--text-sub); padding: 4px; border-radius: 6px;
@@ -270,7 +270,7 @@ body {
 
 .empty-state { text-align: center; padding: 60px 24px; color: var(--text-sub); }
 .empty-state svg { width: 52px; height: 52px; margin-bottom: 12px; opacity: .25; }
-.empty-state p { font-size: 13px; }
+.empty-state p { font-size: 14px; }
 
 /* ── Main area ────────────────────────────────────────── */
 .main { flex: 1; display: flex; flex-direction: column; background: var(--main-bg); }
@@ -289,8 +289,8 @@ body {
 }
 .note-header-avatar:hover { background: var(--primary-light); filter: brightness(.95); }
 .main-header-info { flex: 1; }
-.main-header-info .title   { color: var(--text); font-size: 14px; font-weight: 600; }
-.main-header-info .subtitle{ color: var(--text-sub); font-size: 11px; margin-top: 1px; }
+.main-header-info .title   { color: var(--text); font-size: 16px; font-weight: 600; }
+.main-header-info .subtitle{ color: var(--text-sub); font-size: 12px; margin-top: 1px; }
 .main-header-actions { display: flex; gap: 2px; }
 .main-header .icon-btn { color: var(--text-sub); }
 .main-header .icon-btn:hover { background: var(--primary-light); color: var(--primary); }
@@ -307,7 +307,7 @@ body {
 .date-divider { text-align: center; margin: 6px 0; }
 .date-divider span {
   background: var(--border); color: var(--text-sub);
-  font-size: 11px; padding: 3px 10px; border-radius: 6px; font-weight: 500;
+  font-size: 12px; padding: 3px 10px; border-radius: 6px; font-weight: 500;
 }
 
 .message { max-width: 100%; display: flex; flex-direction: column; }
@@ -323,9 +323,9 @@ body {
 .message.in  .message-bubble { background: var(--bubble-in); border-color: #c7d2fe; }
 [data-theme="dark"] .message.in .message-bubble { border-color: #312e81; }
 
-.message-text { font-size: 14px; color: var(--text); line-height: 1.65; white-space: pre-wrap; }
+.message-text { font-size: 16px; color: var(--text); line-height: 1.65; white-space: pre-wrap; }
 .message-footer { display: flex; align-items: center; gap: 4px; margin-top: 6px; }
-.message-time { font-size: 11px; color: var(--text-sub); }
+.message-time { font-size: 12px; color: var(--text-sub); }
 .message.reminder-msg .message-bubble {
   background: #fffbeb; border-color: #fde68a; border-left: 3px solid var(--reminder-color);
 }
@@ -345,7 +345,7 @@ body {
 .todo-check.done { background: var(--primary); border-color: var(--primary); }
 .todo-check.done svg { display: block; }
 .todo-check svg { display: none; width: 10px; height: 10px; color: white; }
-.todo-text { font-size: 14px; color: var(--text); flex: 1; line-height: 1.5; }
+.todo-text { font-size: 16px; color: var(--text); flex: 1; line-height: 1.5; }
 .todo-text.done { text-decoration: line-through; color: var(--text-sub); }
 
 /* Compose */
@@ -362,7 +362,7 @@ body {
 .compose-box:focus-within { border-color: var(--primary); background: var(--sidebar-bg); }
 .compose-input {
   flex: 1; border: none; outline: none; background: none;
-  font-size: 14px; color: var(--text); resize: none;
+  font-size: 16px; color: var(--text); resize: none;
   max-height: 140px; line-height: 1.5; font-family: inherit;
 }
 .compose-input::placeholder { color: var(--text-sub); }
@@ -383,18 +383,18 @@ body {
 }
 .welcome-icon { font-size: 68px; margin-bottom: 20px; }
 .welcome h2 {
-  font-size: 24px; font-weight: 700; color: var(--text);
+  font-size: 28px; font-weight: 700; color: var(--text);
   margin-bottom: 8px; letter-spacing: -0.5px;
 }
-.welcome p { color: var(--text-sub); font-size: 14px; max-width: 280px; line-height: 1.65; }
+.welcome p { color: var(--text-sub); font-size: 15px; max-width: 280px; line-height: 1.65; }
 .welcome-badge {
   margin-top: 24px; padding: 10px 24px;
   background: var(--primary); color: white; border-radius: 10px;
-  font-size: 14px; font-weight: 600; cursor: pointer;
+  font-size: 15px; font-weight: 600; cursor: pointer;
   transition: background .15s, transform .1s; display: inline-block;
 }
 .welcome-badge:hover { background: var(--primary-hover); transform: translateY(-1px); }
-.user-chip { margin-top: 12px; font-size: 12px; color: var(--text-sub); }
+.user-chip { margin-top: 12px; font-size: 13px; color: var(--text-sub); }
 
 /* ── Dialogs ──────────────────────────────────────────── */
 .overlay {
@@ -415,10 +415,10 @@ body {
 .sheet.center { border-radius: 16px; max-width: 400px; }
 @keyframes slideUp { from { transform: translateY(18px); opacity: 0; } }
 
-.sheet h3 { font-size: 16px; font-weight: 700; margin-bottom: 18px; color: var(--text); }
+.sheet h3 { font-size: 18px; font-weight: 700; margin-bottom: 18px; color: var(--text); }
 .form-field { margin-bottom: 14px; }
 .form-field label {
-  display: block; font-size: 11px; font-weight: 600; color: var(--text-sub);
+  display: block; font-size: 12px; font-weight: 600; color: var(--text-sub);
   margin-bottom: 6px; text-transform: uppercase; letter-spacing: .6px;
 }
 .form-field input,
@@ -426,7 +426,7 @@ body {
 .form-field select {
   width: 100%; padding: 10px 12px; border-radius: 10px;
   border: 1.5px solid var(--border); background: var(--input-bg);
-  color: var(--text); font-size: 14px; font-family: inherit;
+  color: var(--text); font-size: 16px; font-family: inherit;
   outline: none; transition: border-color .2s, background .2s;
 }
 .form-field input:focus,
@@ -436,7 +436,7 @@ body {
 
 .tag-selector { display: flex; gap: 7px; flex-wrap: wrap; }
 .tag-option {
-  padding: 5px 12px; border-radius: 8px; font-size: 12px;
+  padding: 5px 12px; border-radius: 8px; font-size: 13px;
   font-weight: 600; cursor: pointer; border: 2px solid transparent; transition: all .15s;
 }
 .tag-option.work     { background: var(--tag-work);     color: var(--tag-work-text); }
@@ -446,7 +446,7 @@ body {
 .tag-option.selected { border-color: currentColor; }
 
 .btn-row { display: flex; gap: 10px; margin-top: 8px; }
-.btn { padding: 11px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all .15s; font-family: inherit; }
+.btn { padding: 11px 20px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; border: none; transition: all .15s; font-family: inherit; }
 .btn-primary { background: var(--primary); color: white; flex: 1; }
 .btn-primary:hover { background: var(--primary-hover); }
 .btn-ghost { background: var(--bg); color: var(--text); border: 1.5px solid var(--border); }
@@ -465,7 +465,7 @@ body {
 
 /* Reminder */
 .reminder-list-title {
-  font-size: 11px; font-weight: 700; color: var(--text-sub);
+  font-size: 12px; font-weight: 700; color: var(--text-sub);
   text-transform: uppercase; letter-spacing: .6px; margin: 16px 0 8px;
 }
 .reminder-item-row {
@@ -474,8 +474,8 @@ body {
   border: 1px solid var(--border);
 }
 .reminder-item-row .r-info { flex: 1; }
-.reminder-item-row .r-label { font-size: 13px; font-weight: 600; color: var(--text); }
-.reminder-item-row .r-time  { font-size: 11px; color: var(--reminder-color); margin-top: 1px; }
+.reminder-item-row .r-label { font-size: 15px; font-weight: 600; color: var(--text); }
+.reminder-item-row .r-time  { font-size: 12px; color: var(--reminder-color); margin-top: 1px; }
 .reminder-item-row .r-del   { background: none; border: none; cursor: pointer; color: var(--text-sub); font-size: 16px; padding: 2px 6px; border-radius: 6px; }
 .reminder-item-row .r-del:hover { color: #ef4444; background: #fee2e2; }
 .reminder-overdue { border-left: 3px solid #ef4444 !important; }
@@ -489,7 +489,7 @@ body {
   animation: fadeIn .15s; border: 1px solid var(--border);
 }
 .ctx-item {
-  padding: 9px 12px; font-size: 13px; color: var(--text);
+  padding: 9px 12px; font-size: 15px; color: var(--text);
   cursor: pointer; border-radius: 7px;
   display: flex; align-items: center; gap: 9px; font-weight: 500;
 }
@@ -513,10 +513,10 @@ body {
 @keyframes toastIn { from { transform: translateX(100%); opacity: 0; } }
 .toast-icon  { font-size: 20px; flex-shrink: 0; }
 .toast-body  { flex: 1; }
-.toast-title { font-size: 13px; font-weight: 700; color: var(--text); }
-.toast-msg   { font-size: 12px; color: var(--text-sub); margin-top: 2px; line-height: 1.4; }
+.toast-title { font-size: 14px; font-weight: 700; color: var(--text); }
+.toast-msg   { font-size: 13px; color: var(--text-sub); margin-top: 2px; line-height: 1.4; }
 .toast-actions { display: flex; gap: 6px; margin-top: 8px; }
-.toast-btn { padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; }
+.toast-btn { padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; }
 .toast-btn.snooze  { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
 .toast-btn.dismiss { background: var(--reminder-color); color: white; }
 .toast-close { background: none; border: none; cursor: pointer; color: var(--text-sub); padding: 0 4px; font-size: 18px; align-self: flex-start; }
@@ -527,7 +527,7 @@ body {
   content: attr(data-tip);
   position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%);
   background: #0f172a; color: white;
-  font-size: 11px; padding: 4px 8px; border-radius: 6px;
+  font-size: 12px; padding: 4px 8px; border-radius: 6px;
   white-space: nowrap; pointer-events: none;
   opacity: 0; transition: opacity .15s; font-weight: 500;
 }
