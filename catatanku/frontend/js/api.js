@@ -5,7 +5,7 @@
 
 // Lokal: gunakan relative /api (Express serve frontend)
 // Production: ganti RAILWAY_URL dengan URL dari Railway setelah deploy
-const RAILWAY_URL = 'https://YOUR-APP-NAME.railway.app';
+const RAILWAY_URL = 'https://gunote-production.up.railway.app/';
 const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
   ? '/api'
   : RAILWAY_URL + '/api';
