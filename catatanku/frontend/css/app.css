@@ -326,6 +326,12 @@ body {
 .message-text { font-size: 16px; color: var(--text); line-height: 1.65; white-space: pre-wrap; }
 .message-footer { display: flex; align-items: center; gap: 4px; margin-top: 6px; }
 .message-time { font-size: 12px; color: var(--text-sub); }
+.msg-menu-btn {
+  margin-left: auto; background: none; border: none; cursor: pointer;
+  color: var(--text-sub); font-size: 18px; padding: 0 2px; line-height: 1;
+  opacity: .55; transition: opacity .15s; flex-shrink: 0;
+}
+.msg-menu-btn:hover { opacity: 1; color: var(--text); }
 .message.reminder-msg .message-bubble {
   background: #fffbeb; border-color: #fde68a; border-left: 3px solid var(--reminder-color);
 }
@@ -345,8 +351,10 @@ body {
 .todo-check.done { background: var(--primary); border-color: var(--primary); }
 .todo-check.done svg { display: block; }
 .todo-check svg { display: none; width: 10px; height: 10px; color: white; }
-.todo-text { font-size: 16px; color: var(--text); flex: 1; line-height: 1.5; }
+.todo-text { font-size: 16px; color: var(--text); flex: 1; line-height: 1.5; cursor: text; border-radius: 4px; padding: 1px 3px; outline: none; }
 .todo-text.done { text-decoration: line-through; color: var(--text-sub); }
+.todo-text:focus { background: var(--primary-light); }
+[data-theme="dark"] .todo-text:focus { background: var(--primary-muted); }
 
 /* Compose */
 .compose {

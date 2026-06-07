@@ -11,6 +11,7 @@ const state = {
   editMode: false, editId: null, selectedEmoji: '📝',
   selectedTags: [], pendingDeleteId: null, reminderNoteId: null,
   firedReminders: new Set(),
+  editingMsgId: null,
 };
 
 // ─── Theme ────────────────────────────────────────────────────
@@ -75,6 +76,12 @@ function getNextReminder(noteId) {
 }
 function escHtml(s) {
   return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+function escText(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function escAttr(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 // ─── API sync helpers ─────────────────────────────────────────
@@ -240,30 +247,74 @@ function showSidebar() {
 // ─── Messages ─────────────────────────────────────────────────
 function renderMessages(note) {
   const wrap=document.getElementById('messagesWrap');
-  if (!note.messages.length) { wrap.innerHTML=`<div style="text-align:center;color:var(--text-sub);font-size:13px;margin:auto">Belum ada pesan. Ketik di bawah!</div>`; return; }
+  if (!note.messages.length) { wrap.innerHTML=`<div style="text-align:center;color:var(--text-sub);font-size:14px;margin:auto">Belum ada pesan. Ketik di bawah!</div>`; return; }
   let html='', lastDate='';
   note.messages.forEach(msg=>{
     const d=fmtDate(msg.ts);
     if (d!==lastDate) { html+=`<div class="date-divider"><span>${d}</span></div>`; lastDate=d; }
-    if (msg.type==='note') {
+
+    if (state.editingMsgId===msg.id && msg.type==='note') {
+      html+=`<div class="message out"><div class="message-bubble" style="border-color:var(--primary)">
+        <textarea id="editMsgTextarea" class="compose-input" style="width:100%;min-height:72px;padding:0;resize:none" rows="3" oninput="autoResize(this)">${escText(msg.text)}</textarea>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button onclick="saveEditMsg('${note.id}','${msg.id}')" class="btn btn-primary" style="flex:1;padding:8px 0">Simpan</button>
+          <button onclick="cancelEditMsg()" class="btn btn-ghost" style="padding:8px 18px">Batal</button>
+        </div>
+      </div></div>`;
+
+    } else if (state.editingMsgId===msg.id && msg.type==='todo') {
+      const items=(msg.items||[]).map(item=>`
+        <div class="todo-item" style="border-bottom:1px solid var(--border);padding-bottom:6px;margin-bottom:6px">
+          <div class="todo-check ${item.done?'done':''}" onclick="toggleTodo('${note.id}','${msg.id}','${item.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <input type="text" value="${escAttr(item.text)}" class="compose-input"
+            style="flex:1;padding:2px 6px;font-size:15px;${item.done?'text-decoration:line-through;color:var(--text-sub)':''}"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}"
+            onblur="saveEditTodoItem('${note.id}','${msg.id}','${item.id}',this.value)">
+          <button onclick="deleteEditTodoItem('${note.id}','${msg.id}','${item.id}')"
+            style="background:none;border:none;cursor:pointer;color:#ef4444;font-size:20px;padding:0 4px;flex-shrink:0;line-height:1">×</button>
+        </div>`).join('');
+      html+=`<div class="message out"><div class="message-bubble" style="border-color:var(--primary)">
+        <div style="font-size:12px;font-weight:700;color:var(--text-sub);margin-bottom:10px">✏️ Edit Todo</div>
+        ${items}
+        <input type="text" id="newTodoItemInput" placeholder="+ Tambah item baru..." class="compose-input"
+          style="width:100%;padding:7px 10px;border:1.5px dashed var(--border);border-radius:8px;font-size:15px;margin-top:2px"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();addEditTodoItem('${note.id}','${msg.id}',this)}"
+          onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+        <button onclick="doneEditTodo('${note.id}','${msg.id}')" class="btn btn-primary" style="width:100%;margin-top:10px;padding:8px 0">✓ Selesai</button>
+      </div></div>`;
+
+    } else if (msg.type==='note') {
       html+=`<div class="message out"><div class="message-bubble" oncontextmenu="showMsgCtx(event,'${note.id}','${msg.id}')">
         <div class="message-text">${escHtml(msg.text)}</div>
-        <div class="message-footer"><span class="message-time">${fmtTime(msg.ts)}</span></div>
+        <div class="message-footer">
+          <span class="message-time">${fmtTime(msg.ts)}</span>
+          <button class="msg-menu-btn" onclick="event.stopPropagation();showMsgCtx(event,'${note.id}','${msg.id}')">⋮</button>
+        </div>
       </div></div>`;
+
     } else if (msg.type==='todo') {
       const items=(msg.items||[]).map(item=>`<div class="todo-item">
         <div class="todo-check ${item.done?'done':''}" onclick="toggleTodo('${note.id}','${msg.id}','${item.id}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
-        <span class="todo-text ${item.done?'done':''}">${escHtml(item.text)}</span>
+        <span class="todo-text ${item.done?'done':''}" contenteditable="true" spellcheck="false"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}"
+          onblur="saveEditTodoItem('${note.id}','${msg.id}','${item.id}',this.textContent)"
+        >${escText(item.text)}</span>
       </div>`).join('');
       const prog=msg.items?.length?Math.round(msg.items.filter(i=>i.done).length/msg.items.length*100):0;
       html+=`<div class="message out"><div class="message-bubble" oncontextmenu="showMsgCtx(event,'${note.id}','${msg.id}')">
-        <div style="font-size:12px;font-weight:600;color:var(--wa-dark);margin-bottom:6px">✅ Todo · ${msg.items?.filter(i=>i.done).length||0}/${msg.items?.length||0} selesai</div>
+        <div style="font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:6px">✅ Todo · ${msg.items?.filter(i=>i.done).length||0}/${msg.items?.length||0} selesai</div>
         ${items}
         <div class="progress-bar" style="margin-top:8px"><div class="progress-fill" style="width:${prog}%"></div></div>
-        <div class="message-footer"><span class="message-time">${fmtTime(msg.ts)}</span></div>
+        <div class="message-footer">
+          <span class="message-time">${fmtTime(msg.ts)}</span>
+          <button class="msg-menu-btn" onclick="event.stopPropagation();showMsgCtx(event,'${note.id}','${msg.id}')">⋮</button>
+        </div>
       </div></div>`;
+
     } else if (msg.type==='reminder') {
       html+=`<div class="message in reminder-msg"><div class="message-bubble" oncontextmenu="showMsgCtx(event,'${note.id}','${msg.id}')">
         <div style="font-size:12px;font-weight:700;color:var(--reminder-color);margin-bottom:4px">⏰ Pengingat Dibuat</div>
@@ -272,7 +323,12 @@ function renderMessages(note) {
       </div></div>`;
     }
   });
-  wrap.innerHTML=html; wrap.scrollTop=wrap.scrollHeight;
+  wrap.innerHTML=html;
+  if (state.editingMsgId) {
+    const ta=document.getElementById('editMsgTextarea');
+    if (ta) { autoResize(ta); ta.focus(); ta.setSelectionRange(ta.value.length,ta.value.length); }
+  }
+  wrap.scrollTop=wrap.scrollHeight;
 }
 
 // ─── Toggle todo ──────────────────────────────────────────────
@@ -292,11 +348,16 @@ async function toggleTodo(noteId, msgId, itemId) {
 let isTodoMode=false;
 function toggleTodoMode() {
   isTodoMode=!isTodoMode;
-  document.getElementById('todoModeBtn').style.color=isTodoMode?'var(--wa-green)':'var(--text-sub)';
-  document.getElementById('composeInput').placeholder=isTodoMode?'Tulis item todo, satu per baris...':'Ketik pesan atau todo...';
+  document.getElementById('todoModeBtn').style.color=isTodoMode?'var(--primary)':'var(--text-sub)';
+  document.getElementById('composeInput').placeholder=isTodoMode?'Tulis item todo, Enter untuk baris baru...':'Ketik pesan atau todo...';
 }
 function autoResize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,140)+'px'; }
-function handleCompose(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();} }
+function handleCompose(e) {
+  if (e.key==='Enter'&&!e.shiftKey) {
+    if (isTodoMode) return; // Enter = newline baru untuk todo item berikutnya
+    e.preventDefault(); sendMessage();
+  }
+}
 
 async function sendMessage() {
   const note=state.notes.find(n=>n.id===state.activeId); if(!note) return;
@@ -534,8 +595,90 @@ async function deleteMsg(noteId,msgId) {
   const note=state.notes.find(n=>n.id===noteId); if(!note) return;
   note.messages=note.messages.filter(m=>m.id!==msgId);
   note.updatedAt=Date.now();
+  state.editingMsgId=null;
   renderMessages(note); renderList();
   await syncNote(note);
+}
+
+// ─── Copy message ─────────────────────────────────────────────
+function copyMsg(noteId,msgId) {
+  const note=state.notes.find(n=>n.id===noteId);
+  const msg=note?.messages.find(m=>m.id===msgId);
+  if (!msg) return;
+  let text='';
+  if (msg.type==='note') text=msg.text;
+  else if (msg.type==='todo') text=(msg.items||[]).map(i=>(i.done?'[x] ':'[ ] ')+i.text).join('\n');
+  navigator.clipboard.writeText(text)
+    .then(()=>showToast('📋','Disalin!',''))
+    .catch(()=>showToast('❌','Gagal menyalin',''));
+}
+
+// ─── Edit note message ────────────────────────────────────────
+function startEditMsg(noteId,msgId) {
+  state.editingMsgId=msgId;
+  const note=state.notes.find(n=>n.id===noteId);
+  if (note) renderMessages(note);
+}
+async function saveEditMsg(noteId,msgId) {
+  const note=state.notes.find(n=>n.id===noteId);
+  const msg=note?.messages.find(m=>m.id===msgId);
+  if (!msg) return;
+  const ta=document.getElementById('editMsgTextarea');
+  if (!ta) return;
+  const newText=ta.value.trim();
+  if (!newText) return;
+  msg.text=newText;
+  note.updatedAt=Date.now();
+  state.editingMsgId=null;
+  renderMessages(note); renderList();
+  await syncNote(note);
+}
+function cancelEditMsg() {
+  const note=state.notes.find(n=>n.id===state.activeId);
+  state.editingMsgId=null;
+  if (note) renderMessages(note);
+}
+
+// ─── Edit todo items ──────────────────────────────────────────
+async function saveEditTodoItem(noteId,msgId,itemId,newText) {
+  const note=state.notes.find(n=>n.id===noteId);
+  const msg=note?.messages.find(m=>m.id===msgId);
+  const item=msg?.items?.find(i=>i.id===itemId);
+  if (!item) return;
+  const trimmed=(newText||'').trim();
+  if (trimmed && trimmed!==item.text) {
+    item.text=trimmed;
+    note.updatedAt=Date.now();
+    renderList();
+    await syncNote(note);
+  }
+}
+async function deleteEditTodoItem(noteId,msgId,itemId) {
+  const note=state.notes.find(n=>n.id===noteId);
+  const msg=note?.messages.find(m=>m.id===msgId);
+  if (!msg) return;
+  msg.items=msg.items.filter(i=>i.id!==itemId);
+  note.updatedAt=Date.now();
+  renderMessages(note); renderList();
+  await syncNote(note);
+}
+async function addEditTodoItem(noteId,msgId,inputEl) {
+  const text=inputEl.value.trim();
+  if (!text) return;
+  const note=state.notes.find(n=>n.id===noteId);
+  const msg=note?.messages.find(m=>m.id===msgId);
+  if (!msg) return;
+  msg.items=msg.items||[];
+  msg.items.push({id:uid(),text,done:false});
+  note.updatedAt=Date.now();
+  renderMessages(note); renderList();
+  await syncNote(note);
+  setTimeout(()=>{ const inp=document.getElementById('newTodoItemInput'); if(inp) inp.focus(); },50);
+}
+async function doneEditTodo(noteId,msgId) {
+  const note=state.notes.find(n=>n.id===noteId);
+  state.editingMsgId=null;
+  if (note) { note.updatedAt=Date.now(); renderMessages(note); renderList(); await syncNote(note); }
 }
 
 // ─── Context menus ────────────────────────────────────────────
@@ -553,8 +696,19 @@ function showCtx(e,noteId) {
 }
 function showMsgCtx(e,noteId,msgId) {
   e.preventDefault();
+  const note=state.notes.find(n=>n.id===noteId);
+  const msg=note?.messages.find(m=>m.id===msgId);
   const menu=document.getElementById('ctxMenu');
-  menu.innerHTML=`<div class="ctx-item danger" onclick="deleteMsg('${noteId}','${msgId}');hideCtx()">🗑️ Hapus Pesan</div>`;
+  let items='';
+  if (msg?.type==='note') {
+    items+=`<div class="ctx-item" onclick="copyMsg('${noteId}','${msgId}');hideCtx()">📋 Salin</div>`;
+    items+=`<div class="ctx-item" onclick="startEditMsg('${noteId}','${msgId}');hideCtx()">✏️ Edit</div>`;
+  } else if (msg?.type==='todo') {
+    items+=`<div class="ctx-item" onclick="copyMsg('${noteId}','${msgId}');hideCtx()">📋 Salin Semua</div>`;
+    items+=`<div class="ctx-item" onclick="startEditMsg('${noteId}','${msgId}');hideCtx()">✏️ Edit Todo</div>`;
+  }
+  items+=`<div class="ctx-item danger" onclick="deleteMsg('${noteId}','${msgId}');hideCtx()">🗑️ Hapus</div>`;
+  menu.innerHTML=items;
   posCtx(e,menu);
 }
 function posCtx(e,menu) {
