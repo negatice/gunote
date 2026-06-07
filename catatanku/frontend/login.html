@@ -158,7 +158,7 @@
 <script src="js/api.js"></script>
 <script>
   // Redirect jika sudah login
-  if (Auth.isLoggedIn()) window.location.href = '/';
+  if (Auth.isLoggedIn()) window.location.replace('/');
 
   function switchTab(tab) {
     const isLogin = tab === 'login';
@@ -197,7 +197,7 @@
       const { token, user } = await API.auth.login(email, password);
       Auth.setToken(token);
       Auth.setUser(user);
-      window.location.href = '/';
+      window.location.replace('/');
     } catch (err) {
       showAlert(err.message);
     } finally {
@@ -217,7 +217,7 @@
       Auth.setToken(token);
       Auth.setUser(user);
       showAlert('Akun berhasil dibuat! Mengalihkan...', 'success');
-      setTimeout(() => { window.location.href = '/'; }, 1200);
+      setTimeout(() => { window.location.replace('/'); }, 1200);
     } catch (err) {
       showAlert(err.message);
     } finally {

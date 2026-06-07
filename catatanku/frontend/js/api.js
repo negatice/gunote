@@ -36,7 +36,7 @@ async function apiRequest(method, path, body = null) {
   if (res.status === 401) {
     Auth.clear();
     const isLoginPage = window.location.pathname.includes('login');
-    if (!isLoginPage) window.location.href = '/login.html';
+    if (!isLoginPage) window.location.replace('/login');
     throw new Error('Sesi habis, silakan login kembali');
   }
 
@@ -81,7 +81,7 @@ const API = {
 // ─── Auth guard (panggil di setiap halaman protected) ─────────
 async function requireAuth() {
   if (!Auth.isLoggedIn()) {
-    window.location.href = '/login.html';
+    window.location.replace('/login');
     return null;
   }
   try {
@@ -90,7 +90,7 @@ async function requireAuth() {
     return user;
   } catch {
     Auth.clear();
-    window.location.href = '/login.html';
+    window.location.replace('/login');
     return null;
   }
 }

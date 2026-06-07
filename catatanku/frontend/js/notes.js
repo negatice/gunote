@@ -115,7 +115,7 @@ async function loadData() {
 // ─── Logout ──────────────────────────────────────────────────
 function logout() {
   Auth.clear();
-  window.location.href = '/login.html';
+  window.location.replace('/login');
 }
 
 // ─── Filter ──────────────────────────────────────────────────
