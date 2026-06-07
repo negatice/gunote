@@ -6,29 +6,30 @@
   <title>CatatanKu – Login</title>
   <style>
     :root {
-      --wa-green: #25D366; --wa-dark: #128C7E; --wa-darker: #075E54;
-      --bg: #f0f2f5; --surface: #ffffff; --text: #111b21;
-      --text-sub: #667781; --border: #e9edef; --input-bg: #f8f9fa;
-      --error: #e53935;
+      --primary: #4f46e5; --primary-hover: #4338ca; --primary-light: #eef2ff;
+      --bg: #f1f5f9; --surface: #ffffff; --text: #0f172a;
+      --text-sub: #64748b; --border: #e2e8f0; --input-bg: #f8fafc;
+      --error: #dc2626;
     }
     [data-theme="dark"] {
-      --bg: #111b21; --surface: #202c33; --text: #e9edef;
-      --text-sub: #8696a0; --border: #2a3942; --input-bg: #2a3942;
+      --bg: #0f172a; --surface: #1e293b; --text: #f1f5f9;
+      --text-sub: #94a3b8; --border: #334155; --input-bg: #0f172a;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg); color: var(--text);
       min-height: 100vh; display: flex; flex-direction: column;
     }
 
     /* Header */
     .login-header {
-      background: #202c33; padding: 14px 24px;
-      display: flex; align-items: center; gap: 12px;
+      background: var(--surface); padding: 14px 24px;
+      display: flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid var(--border);
     }
-    .login-header .logo { font-size: 24px; }
-    .login-header h1 { color: #e9edef; font-size: 20px; font-weight: 600; }
+    .login-header .logo { font-size: 22px; }
+    .login-header h1 { color: var(--primary); font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
 
     /* Main */
     .login-main {
@@ -37,64 +38,53 @@
     }
     .login-card {
       background: var(--surface); border-radius: 20px;
-      box-shadow: 0 4px 32px rgba(0,0,0,.12);
+      box-shadow: 0 4px 40px rgba(79,70,229,.08), 0 1px 3px rgba(0,0,0,.06);
       padding: 36px 32px; width: 100%; max-width: 400px;
+      border: 1px solid var(--border);
     }
 
     /* Tabs */
     .auth-tabs { display: flex; gap: 0; margin-bottom: 28px; border-bottom: 2px solid var(--border); }
     .auth-tab {
-      flex: 1; padding: 10px; text-align: center; font-size: 15px; font-weight: 600;
+      flex: 1; padding: 10px; text-align: center; font-size: 14px; font-weight: 600;
       cursor: pointer; background: none; border: none; color: var(--text-sub);
       border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .2s;
     }
-    .auth-tab.active { color: var(--wa-dark); border-bottom-color: var(--wa-dark); }
+    .auth-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
 
     /* Form */
     .auth-form { display: flex; flex-direction: column; gap: 16px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group label {
-      font-size: 12px; font-weight: 700; color: var(--text-sub);
-      text-transform: uppercase; letter-spacing: .5px;
+      font-size: 11px; font-weight: 700; color: var(--text-sub);
+      text-transform: uppercase; letter-spacing: .6px;
     }
     .form-group input {
-      padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border);
-      background: var(--input-bg); color: var(--text); font-size: 15px;
-      font-family: inherit; outline: none; transition: border-color .2s;
+      padding: 11px 14px; border-radius: 10px; border: 1.5px solid var(--border);
+      background: var(--input-bg); color: var(--text); font-size: 14px;
+      font-family: inherit; outline: none; transition: border-color .2s, background .2s;
     }
-    .form-group input:focus { border-color: var(--wa-dark); }
+    .form-group input:focus { border-color: var(--primary); background: var(--surface); }
     .form-group input::placeholder { color: var(--text-sub); }
 
     /* Submit */
     .submit-btn {
-      padding: 14px; border-radius: 12px; border: none; cursor: pointer;
-      background: var(--wa-green); color: white; font-size: 15px; font-weight: 700;
-      font-family: inherit; transition: all .2s; margin-top: 4px;
+      padding: 12px; border-radius: 10px; border: none; cursor: pointer;
+      background: var(--primary); color: white; font-size: 14px; font-weight: 700;
+      font-family: inherit; transition: all .15s; margin-top: 4px; letter-spacing: .2px;
     }
-    .submit-btn:hover { background: var(--wa-dark); }
-    .submit-btn:disabled { opacity: .6; cursor: not-allowed; }
+    .submit-btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    .submit-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
 
     /* Error / Success */
     .alert {
       padding: 10px 14px; border-radius: 10px; font-size: 13px; font-weight: 500;
       display: none; margin-bottom: 4px;
     }
-    .alert.error { background: #ffebee; color: var(--error); border: 1px solid #ffcdd2; }
-    .alert.success { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
-    [data-theme="dark"] .alert.error { background: #2a1010; color: #ef9a9a; border-color: #4a2020; }
-    [data-theme="dark"] .alert.success { background: #0a2010; color: #a5d6a7; border-color: #1a4020; }
-
-    /* Divider */
-    .divider {
-      text-align: center; font-size: 12px; color: var(--text-sub); margin: 4px 0;
-      position: relative;
-    }
-    .divider::before, .divider::after {
-      content: ''; position: absolute; top: 50%; width: 38%; height: 1px;
-      background: var(--border);
-    }
-    .divider::before { left: 0; }
-    .divider::after { right: 0; }
+    .alert.error   { background: #fef2f2; color: var(--error); border: 1px solid #fecaca; }
+    .alert.success { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+    [data-theme="dark"] .alert.error   { background: #2a0a0a; color: #fca5a5; border-color: #7f1d1d; }
+    [data-theme="dark"] .alert.success { background: #052e16; color: #86efac; border-color: #14532d; }
 
     /* Footer */
     .login-footer {
@@ -103,7 +93,7 @@
 
     /* Loading spinner */
     .spinner {
-      display: inline-block; width: 16px; height: 16px;
+      display: inline-block; width: 15px; height: 15px;
       border: 2px solid rgba(255,255,255,.4); border-top-color: white;
       border-radius: 50%; animation: spin .6s linear infinite;
       vertical-align: middle; margin-right: 6px;
