@@ -49,15 +49,23 @@ body {
   color: var(--text);
   min-height: 100vh;
   padding-bottom: 80px;
+  overflow-x: hidden;
 }
 
 /* ── App Container ─────────────────────────────────── */
 .fin-app {
-  max-width: 640px;
+  max-width: 1400px;
   margin: 0 auto;
   background: var(--bg);
   min-height: 100vh;
 }
+
+/* ── Two-column layout (desktop) ────────────────────── */
+.fin-columns {
+  display: flex;
+  flex-direction: column;
+}
+.fin-col-left, .fin-col-right { width: 100%; }
 
 /* ── Header ────────────────────────────────────────── */
 .fin-header {
@@ -200,7 +208,7 @@ body {
   gap: 12px;
   border-bottom: 1px solid var(--border);
   position: sticky;
-  top: 52px;
+  top: 56px;
   z-index: 40;
 }
 
@@ -860,6 +868,65 @@ body {
 .toast-close { background: none; border: none; cursor: pointer; color: var(--text-sub); font-size: 16px; padding: 0; }
 
 /* ── Responsive ─────────────────────────────────────── */
+
+/* Tablet (≥640px): 4-column summary cards, shadow */
+@media (min-width: 640px) {
+  .fin-app { box-shadow: 0 0 40px rgba(0,0,0,.08); }
+  .summary-cards { grid-template-columns: repeat(4, 1fr); }
+  .balance-hero { padding: 32px 28px 28px; }
+  .balance-amount { font-size: 42px; }
+  .period-bar { padding: 12px 24px; }
+  .chart-section, .cat-section { margin: 12px 20px 0; }
+  .tx-section { margin: 12px 20px 0; }
+  .summary-cards { padding: 14px 20px 0; }
+  .chart-wrap { height: 220px; }
+}
+
+/* Desktop (≥900px): two-column layout */
+@media (min-width: 900px) {
+  .fin-columns {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0;
+    padding: 0 20px 24px;
+  }
+  .fin-col-left {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-right: 10px;
+  }
+  .fin-col-right {
+    width: 420px;
+    flex-shrink: 0;
+    padding-left: 10px;
+  }
+  .chart-section, .cat-section { margin: 12px 0 0; }
+  .tx-section { margin: 12px 0 0; position: sticky; top: 110px; }
+  .chart-wrap { height: 200px; }
+  .summary-cards { grid-template-columns: repeat(4, 1fr); padding: 14px 24px 0; }
+  .balance-hero { padding: 36px 32px 28px; }
+  .period-bar { padding: 12px 28px; }
+}
+
+/* Large desktop (≥1200px): wider sidebar column */
+@media (min-width: 1200px) {
+  .fin-col-right { width: 480px; }
+  .balance-amount { font-size: 48px; }
+  .balance-hero { padding: 40px 36px 32px; }
+  .summary-cards { padding: 16px 28px 0; gap: 14px; }
+  .fin-columns { padding: 0 24px 28px; }
+}
+
+/* XL (≥1600px): full-width max */
+@media (min-width: 1600px) {
+  .fin-col-right { width: 520px; }
+  .fin-columns { padding: 0 32px 32px; }
+}
+
+/* Mobile kecil (≤480px) */
 @media (max-width: 480px) {
   .balance-amount { font-size: 28px; }
   .summary-cards { padding: 10px 10px 0; gap: 8px; }
@@ -867,12 +934,8 @@ body {
   .period-tab { padding: 4px 10px; font-size: 12px; }
   .period-label { min-width: 80px; font-size: 12px; }
   .sc-value { font-size: 15px; }
-  .fab { bottom: 16px; right: 16px; width: 52px; height: 52px; }
+  .fab { bottom: 16px; right: 16px; width: 50px; height: 50px; }
   .toast-container { top: auto; bottom: 80px; right: 10px; left: 10px; max-width: 100%; }
-}
-
-@media (min-width: 641px) {
-  .fin-app { box-shadow: 0 0 40px rgba(0,0,0,.1); }
 }
 
 /* ── Scrollbar ──────────────────────────────────────── */

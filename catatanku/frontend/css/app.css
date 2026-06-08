@@ -92,15 +92,13 @@ body {
 
 /* ── Layout ───────────────────────────────────────────── */
 .app {
-  display: flex; height: 100vh;
-  max-width: 1280px; margin: 0 auto;
-  box-shadow: 0 0 60px rgba(0,0,0,.08);
+  display: flex; height: 100vh; width: 100%;
   background: var(--main-bg);
 }
 
 /* ── Sidebar ──────────────────────────────────────────── */
 .sidebar {
-  width: 320px; min-width: 280px;
+  width: 300px; min-width: 260px; flex-shrink: 0;
   background: var(--sidebar-bg);
   border-right: 1px solid var(--border);
   display: flex; flex-direction: column;
@@ -541,7 +539,37 @@ body {
 }
 .tooltip:hover::after { opacity: 1; }
 
-/* ── Mobile ───────────────────────────────────────────── */
+/* ── Responsive ───────────────────────────────────────── */
+
+/* Tablet kecil / landscape HP (768-1023px) */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .sidebar { width: 260px; min-width: 220px; }
+  .sidebar-header h1 { font-size: 18px; }
+  .filter-tab { padding: 4px 9px; font-size: 12px; }
+  .note-avatar { width: 36px; height: 36px; font-size: 16px; }
+}
+
+/* Desktop standar (1024-1439px) */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .sidebar { width: 300px; }
+}
+
+/* Desktop besar (1440-1919px) */
+@media (min-width: 1440px) {
+  .sidebar { width: 340px; }
+  .messages-wrap { padding: 24px 28px; }
+  .compose { padding: 13px 18px; }
+}
+
+/* Monitor XL (1920px+) */
+@media (min-width: 1920px) {
+  .sidebar { width: 380px; }
+  .note-item { padding: 14px 18px; }
+  .messages-wrap { padding: 28px 36px; }
+  .sidebar-header h1 { font-size: 24px; }
+}
+
+/* Mobile (≤768px) */
 @media (max-width: 768px) {
   .sidebar { width: 100%; min-width: unset; position: absolute; top: 0; left: 0; bottom: 0; z-index: 10; }
   .sidebar.hidden { transform: translateX(-100%); }
@@ -551,8 +579,13 @@ body {
   .sheet { max-width: 100%; }
   .toast-container { top: auto; bottom: 80px; right: 12px; left: 12px; max-width: 100%; }
 }
+
+/* HP kecil (≤480px) */
 @media (max-width: 480px) {
   .compose { padding: 8px 10px; }
   .main-header { padding: 9px 12px; }
-  .messages-wrap { padding: 14px 14px; }
+  .messages-wrap { padding: 12px; }
+  .sidebar-header { padding: 11px 12px; }
+  .search-wrap { padding: 10px 12px; }
+  .sheet { padding: 20px 16px 28px; }
 }
